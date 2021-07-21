@@ -3,17 +3,42 @@ import setAxiosHeaders from './AxiosHeaders';
 import axios from 'axios';
 import { Form, Input, Button, Card } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import './Ant.css';
-import Dashboard from './Dashboard';
+import { message } from 'antd';
 
 
 const LoginForm = (props) => {
     const [form] = Form.useForm();
     const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
+    const [loading, setLoading] = useState(false);
+
 
     useEffect(() => {
         forceUpdate({});
     }, []);
+
+    const onClickBtn = () => {
+        setLoading(true);
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
+      };
+
+    const userLoginSuccess = () => {
+        return new Promise((resolve, reject) => {
+            axios.get('/check_user',{
+            })
+            .then((response) => {
+              if(response.data.email){
+                resolve(response.data.email);
+              } else {
+                reject(new Error("Failed"));
+              }
+            })
+            .catch((error) => {
+              reject(error);
+            })
+        });
+    }
 
     const handleLogin = (e) => {
         setAxiosHeaders();
@@ -23,20 +48,29 @@ const LoginForm = (props) => {
             password: document.getElementById("password").value,
         }
         })
-        .then(() => {
-            // props.history.push("/");
-            window.location.reload();
-            const logged = "yes";
-            <Dashboard logged={logged} />
+        .then(async () => {
+            await userLoginSuccess();
+            message.success('Login Successful', 5);
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+            
         })
-        .catch((error) => {
-            console.log(error)
+        .catch(() => {
+            message.error('Invalid Email or Password Combination', 5);
         })
     }
 
     return (
-       <div className="form-div site-card-border-less-wrapper" align="center">
-            <Card title="Login" bordered={false} style={{ width: 300 }}>
+       <div
+       style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%,-50%)',
+        }}
+       >
+            <Card title="Login" style={{ width: 350 }}>
                 <Form form={form} name="normal_login" className="login-form" initialValues={{remember: true,}} onFinish={handleLogin} onSubmit={e => e.preventDefault()}>
                     <Form.Item
                         name="email"
@@ -71,10 +105,12 @@ const LoginForm = (props) => {
                                 type="primary"
                                 htmlType="submit"
                                 className="login-form-button"
-                                disabled={
-                                    !form.isFieldsTouched(true) ||
-                                    !!form.getFieldsError().filter(({ errors }) => errors.length).length
-                                }
+                                onClick={onClickBtn}
+                                loading={loading}
+                                // disabled={
+                                //     !form.isFieldsTouched(true) ||
+                                //     !!form.getFieldsError().filter(({ errors }) => errors.length).length
+                                // }
                             >
                             Log in
                             </Button>

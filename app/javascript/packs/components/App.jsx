@@ -1,40 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
-import Header from './Header';
-import 'antd/dist/antd.css'; 
-
+import Routes from "./routes/index";
+import "./css/Antd.less";
+import "./css/App.css"
 
 const App = (props) => {
 
-  const [currentUser, setCurrentUser] = useState(null);
-
-  useEffect(() => {
-    axios.get('/check_user',{
-    })
-    .then((response) => {
-      if(response.data.email){
-        setCurrentUser(response.data.email)
-        console.log(response.data.email)
-      } else {
-        setCurrentUser(null);
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-  }, []);
-
-  const updateCurrentUser = (email) => {
-    setCurrentUser(email);
-  }
-
   return (
-    <div>
-      <Header currentUser={currentUser} updateCurrentUser={updateCurrentUser}/>
-    </div>
-  );
-
+    <>
+      {Routes};
+    </>
+  )
 }
 
 

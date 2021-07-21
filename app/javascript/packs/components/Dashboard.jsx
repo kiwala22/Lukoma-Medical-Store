@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Layout, Menu } from 'antd';
 import {
@@ -11,7 +10,6 @@ import {
   LogoutOutlined,
   HomeOutlined,
 } from '@ant-design/icons';
-import './Ant.css';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -41,17 +39,23 @@ const Dashboard = (props) => {
 
     return (
         <Layout>
-            <Sider trigger={null} collapsible collapsed={collapsed}>
+            <Sider trigger={null} collapsible collapsed={collapsed}
+             style={{
+                overflow: 'auto',
+                height: '100vh',
+                left: 0,
+              }}
+            >
                 <div className="logo" />
                 <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} >
                     <Menu.Item key="1" icon={<HomeOutlined />}>
-                    nav 1
+                    DashBoard
                     </Menu.Item>
                     <Menu.Item key="2" icon={<VideoCameraOutlined />}>
-                    nav 2
+                    Products
                     </Menu.Item>
                     <Menu.Item key="3" icon={<UploadOutlined />}>
-                    nav 3
+                    Sales
                     </Menu.Item>
                     
                 </Menu>
@@ -76,7 +80,7 @@ const Dashboard = (props) => {
                     minHeight: 500,
                     }}
                 >
-                    <p>Welcome, Admin</p>
+                    <p>Welcome, Alick Pro to our Site!</p>
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>Lukoma Medical Store ©2021 Created by Martin & Paul</Footer>
             </Layout>

@@ -14,9 +14,14 @@
   width: 100%;
 }
 
+
 .form-div {
-    padding: 24px;
-    padding-top: 150px;
+    position: 'absolute';
+    left: '50%';
+    top: '50%';
+    transform: 'translate(-50%,-50%)';
+    /* padding: 24px;
+    padding-top: 150px; */
     /* align: center; */
     /* height: 100%; */
 }
