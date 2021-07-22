@@ -48,6 +48,10 @@
     background: #fff;
   }
 
+  .site-layout .site-layout-background-head {
+    background: #001529;
+  }
+
 .site-card-border-less-wrapper {
     padding: 30px;
     background: #ececec;
