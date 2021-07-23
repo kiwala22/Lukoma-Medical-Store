@@ -50,8 +50,9 @@ const LoginForm = (props) => {
         })
         .then(async () => {
             await userLoginSuccess();
-            message.success('Login Successful', 5);
+            message.success('Login Successful', 8);
             setTimeout(() => {
+                props.history.push("/");
                 window.location.reload();
             }, 2000);
             
@@ -70,7 +71,7 @@ const LoginForm = (props) => {
             transform: 'translate(-50%,-50%)',
         }}
        >
-            <Card title="Login" style={{ width: 350 }}>
+            <Card title="Log in to your account" style={{ width: 350 }}>
                 <Form form={form} name="normal_login" className="login-form" initialValues={{remember: true,}} onFinish={handleLogin} onSubmit={e => e.preventDefault()}>
                     <Form.Item
                         name="email"

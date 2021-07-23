@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Table, message, Popconfirm } from "antd";
 import ProductForm from "./ProductForm";
-import { Layout } from 'antd';
-import Footing from './Footing';
-import SideBar from './SideBar';
-import Heading from './Heading';
 
-const { Content } = Layout;
+// const { Content } = Layout;
 
 const Products = (props) => {
 
@@ -106,25 +102,12 @@ const Products = (props) => {
     }
 
     return (
-        <Layout style={{ minHeight: '100vh' }}>
-            <SideBar  />
-            <Layout className="site-layout">
-                <Heading />
-                <Content
-                    className="site-layout-background"
-                    style={{
-                    margin: '24px 16px',
-                    padding: 24,
-                    }}
-                >
-                    <h1>In Store Medicines</h1>
-                    <Table className="table-striped-rows" dataSource={products} columns={columns} pagination={{ pageSize: 5 }} />
-    
-                    <ProductForm reloadProducts={reloadProducts} />
-                </Content>
-                <Footing />
-            </Layout>
-        </Layout>
+        <>
+            <h1>In Store Medicines</h1>
+            <Table className="table-striped-rows" dataSource={products} columns={columns} pagination={{ pageSize: 5 }} />
+
+            <ProductForm reloadProducts={reloadProducts} />
+        </>
     );
 
 

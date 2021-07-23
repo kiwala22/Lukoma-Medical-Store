@@ -7,7 +7,7 @@ const { Footer } = Layout;
 const Footing = () => {
 
   return (
-    <Footer style={{ textAlign: 'center' }}>Lukoma Medical Store ©2021</Footer>
+    <Footer style={{ textAlign: 'center', fontSize: 18 }}>Lukoma Medical Store ©2021</Footer>
   );
 }
 

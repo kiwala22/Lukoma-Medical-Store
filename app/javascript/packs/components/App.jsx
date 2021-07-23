@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import Routes from "./routes/index";
 import "./css/Antd.less";
@@ -8,7 +8,7 @@ const App = (props) => {
 
   return (
     <>
-      {Routes};
+      {Routes}
     </>
   )
 }
