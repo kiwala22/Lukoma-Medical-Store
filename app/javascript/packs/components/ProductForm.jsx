@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Form, Input, Modal, Select, DatePicker, message  } from "antd";
 import {
     CloseOutlined,
-    PlusOutlined,
+    PlusCircleOutlined,
   } from '@ant-design/icons';
 const { Option } = Select;
 
@@ -49,7 +49,7 @@ const ProductForm = (props) => {
 
     return (
         <>
-            <Button type="primary" style={{float: 'right'}} onClick={showModal}><PlusOutlined/> New Product</Button>
+            <Button type="primary" style={{float: 'right'}} onClick={showModal}><PlusCircleOutlined/> New Product</Button>
             <Modal 
             title="New Product"
             visible={visible}
@@ -92,24 +92,16 @@ const ProductForm = (props) => {
                     </Form.Item>
 
                     <Form.Item name="unit_price" label="Unit Price" rules={[{ required: true, message: "Please input the unit price!" }]}>
-                    <Input addonBefore={"UGX"} type="number" placeholder="Unit Price" />
+                    <Input prefix={"UGX"} type="number" placeholder="Unit Price" />
                     </Form.Item>
 
                     <Form.Item name="expiry_date" label="Expiry Date" rules={[{ required: true, message: "Please select an expiry date!" }]} >
-                        <DatePicker
+                        <DatePicker style={{width: '100%'}}
                         dateRender={current => {
-                            const style = {
-                                    width: '100%',
-                            };
-                            if (current.date() === 1) {
-                            style.border = '1px solid #1890ff';
-                            style.borderRadius = '50%';
-                            style.width = '100%';
-                            }
                             return (
-                            <div className="ant-picker-cell-inner" style={style}>
-                                {current.date()}
-                            </div>
+                                <div className="ant-picker-cell-inner">
+                                    {current.date()}
+                                </div>
                             );
                         }}
                         />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import setAxiosHeaders from './AxiosHeaders';
 import axios from 'axios';
 import { Form, Input, Button, Card } from 'antd';
@@ -8,20 +8,7 @@ import { message } from 'antd';
 
 const LoginForm = (props) => {
     const [form] = Form.useForm();
-    const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
     const [loading, setLoading] = useState(false);
-
-
-    useEffect(() => {
-        forceUpdate({});
-    }, []);
-
-    const onClickBtn = () => {
-        setLoading(true);
-        setTimeout(() => {
-          setLoading(false);
-        }, 2000);
-      };
 
     const userLoginSuccess = () => {
         return new Promise((resolve, reject) => {
@@ -40,17 +27,16 @@ const LoginForm = (props) => {
         });
     }
 
-    const handleLogin = (e) => {
+    const handleLogin = (values) => {
+        setLoading(true);
         setAxiosHeaders();
         axios.post('/users/sign_in', {
-        user: {
-            email: document.getElementById("email").value,
-            password: document.getElementById("password").value,
-        }
+            user: values
         })
         .then(async () => {
             await userLoginSuccess();
             message.success('Login Successful', 8);
+            setLoading(false);
             setTimeout(() => {
                 props.history.push("/");
                 window.location.reload();
@@ -82,7 +68,7 @@ const LoginForm = (props) => {
                             },
                         ]}
                     >
-                        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" id="email" />
+                        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email"  />
                     </Form.Item>
                     <Form.Item
                         name="password"
@@ -93,11 +79,9 @@ const LoginForm = (props) => {
                             },
                         ]}
                     >
-                        <Input
+                        <Input.Password
                             prefix={<LockOutlined className="site-form-item-icon" />}
-                            type="password"
                             placeholder="Password"
-                            id="password"
                         />
                     </Form.Item>
                     <Form.Item shouldUpdate>
@@ -106,7 +90,7 @@ const LoginForm = (props) => {
                                 type="primary"
                                 htmlType="submit"
                                 className="login-form-button"
-                                onClick={onClickBtn}
+                                // onClick={onClickBtn}
                                 loading={loading}
                                 // disabled={
                                 //     !form.isFieldsTouched(true) ||

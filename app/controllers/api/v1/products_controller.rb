@@ -13,7 +13,6 @@ class Api::V1::ProductsController < ApplicationController
     def create
         @product = Product.new(product_params)
 
-
         if @product.save
           render json: @product
         else
@@ -30,13 +29,13 @@ class Api::V1::ProductsController < ApplicationController
     def destroy
         @product.destroy
 
-        render json: { notice: 'product was successfully removed.' }
+        render json: { notice: 'Product was successfully removed.' }
     end
 
     private
 
     def set_product
-        @product = product.find(params[:id])
+        @product = Product.find(params[:id])
     end
 
     def product_params

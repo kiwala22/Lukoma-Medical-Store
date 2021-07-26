@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Table, message, Popconfirm } from "antd";
+import { Table, message, Popconfirm, Button } from "antd";
 import ProductForm from "./ProductForm";
+import Spinner from "./Spinner";
+import {
+    PlusCircleOutlined,
+  } from '@ant-design/icons';
 
 // const { Content } = Layout;
 
 const Products = (props) => {
+
+    const [isLoading, setIsLoading] = useState(true);
 
     const columns = [
         {
@@ -27,10 +33,20 @@ const Products = (props) => {
             title: "Unit Price",
             dataIndex: "unitPrice",
             key: "unit_price",
+            responsive: ['md'],
         },{
             title: "Expiry Date",
             dataIndex: "expiryDate",
             key: "expiry_date",
+            responsive: ['md'],
+        },
+        {
+            title: "Actions",
+            key: "action",
+            render: (_text, record) => (
+              <Button type="primary" onClick={() => addProductToBasket(record.id)}><PlusCircleOutlined/>Sale</Button>
+            ),
+            responsive: ['md'],
         },
         {
             title: "Actions",
@@ -42,7 +58,7 @@ const Products = (props) => {
                 </a>
               </Popconfirm>
             ),
-          },
+        },
     ];
 
     const [products, setProducts] = useState([]);
@@ -52,6 +68,7 @@ const Products = (props) => {
     useEffect(() => { loadProducts() }, []);
 
     const loadProducts = () => {
+        // setIsLoading(true);
         const url = path+'index';
         fetch(url)
         .then((data) => {
@@ -76,24 +93,59 @@ const Products = (props) => {
                     return [newEl, ...prevProducts];
                 });
             });
+            setIsLoading(false);
         })
         .catch((err) => message.error("Error: " + err), 10);
     }
 
     const reloadProducts = () => {
+        setIsLoading(true);
         setProducts([]);
         loadProducts();
     }
 
+    const addProductToBasket = (id) => {
+        const csrf =  document.querySelector("meta[name='csrf-token']").getAttribute("content");
+        const url = '/line_items';
+        let values = {product_id: id};
+        fetch(url, {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-Token": csrf,
+            },
+            body: JSON.stringify(values),
+          })
+        .then((data) => {
+            if (data.ok) {
+              message.success('Product Added to Basket.', 2);
+    
+              return data.json();
+            }
+            throw new Error("Network error.");
+          })
+        .then(() => {
+            props.reloadBasket();
+        })
+        .catch((err) => message.error("Error: " + err));
+
+    }
+
     const deleteProduct = (id) => {
+        const csrf =  document.querySelector("meta[name='csrf-token']").getAttribute("content");
         const url = path+`${id}`;
 
         fetch(url, {
           method: "delete",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": csrf,
+          },
         })
         .then((data) => {
         if (data.ok) {
-            this.reloadBeers();
+            reloadProducts();
+            message.success("Product Removed.");
             return data.json();
         }
             throw new Error("Network error.");
@@ -104,9 +156,14 @@ const Products = (props) => {
     return (
         <>
             <h1>In Store Medicines</h1>
-            <Table className="table-striped-rows" dataSource={products} columns={columns} pagination={{ pageSize: 5 }} />
-
-            <ProductForm reloadProducts={reloadProducts} />
+            {!isLoading &&
+                <>
+                    <Table className="table-striped-rows" dataSource={products} columns={columns} pagination={{ pageSize: 5 }} scroll={{ y: 300, x: '100vw' }} />
+                    <br/>
+                    <ProductForm reloadProducts={reloadProducts} />
+                </>
+            }
+            {isLoading && <Spinner />}
         </>
     );
 

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :line_items
+  resources :baskets
   root to: "dashboard#index"
 
   namespace :api do
@@ -11,6 +13,8 @@ Rails.application.routes.draw do
 
   match "check_user" => "application#check_user", via: [:get]
   match "products" => "products#index", via: [:get]
+  match "basket" => "line_items#basket_data", via: [:get]
+  match "clear_basket" => "line_items#destroy", via: [:delete]
   
   devise_for :users
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
