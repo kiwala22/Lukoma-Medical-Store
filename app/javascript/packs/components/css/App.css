@@ -14,50 +14,49 @@
   width: 100%;
 }
 
-
 .form-div {
-    position: 'absolute';
-    left: '50%';
-    top: '50%';
-    transform: 'translate(-50%,-50%)';
-    /* padding: 24px;
+  position: "absolute";
+  left: "50%";
+  top: "50%";
+  transform: "translate(-50%,-50%)";
+  /* padding: 24px;
     padding-top: 150px; */
-    /* align: center; */
-    /* height: 100%; */
+  /* align: center; */
+  /* height: 100%; */
 }
 
 .trigger {
-    padding: 0 24px;
-    font-size: 18px;
-    line-height: 64px;
-    cursor: pointer;
-    transition: color 0.3s;
-  }
-  
-  .trigger:hover {
-    color: #1890ff;
-  }
-  
-  /* .logo {
+  padding: 0 24px;
+  font-size: 18px;
+  line-height: 64px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+/* .logo {
     height: 32px;
     margin: 16px;
     background: rgba(255, 255, 255, 0.3);
   } */
-  
-  .site-layout .site-layout-background {
-    background: #fff;
-  }
 
-  .site-layout .site-layout-background-head {
-    background: #001529;
-  }
+.site-layout .site-layout-background {
+  background: #fff;
+}
+
+.site-layout .site-layout-background-head {
+  background: #001529;
+}
 
 .site-card-border-less-wrapper {
-    padding: 30px;
-    background: #ececec;
-  }
+  padding: 30px;
+  background: #ececec;
+}
 [data-theme="dark"] .site-card-border-less-wrapper {
-    background: #303030;
+  background: #303030;
 }
 .site-layout-content {
   background: #fff;
@@ -70,7 +69,7 @@
   min-height: 31px;
   margin: 16px 24px 16px 0;
   float: left;
-  background-image: url("../images/navbar_logo.svg");
+  background-image: url("../images/medical-logo-2.png");
   background-repeat: no-repeat;
 }
 

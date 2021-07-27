@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_26_124657) do
+ActiveRecord::Schema.define(version: 2021_07_27_073011) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,8 +26,10 @@ ActiveRecord::Schema.define(version: 2021_07_26_124657) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "quantity", default: 1
+    t.bigint "sale_id"
     t.index ["basket_id"], name: "index_line_items_on_basket_id"
     t.index ["product_id"], name: "index_line_items_on_product_id"
+    t.index ["sale_id"], name: "index_line_items_on_sale_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -37,6 +39,14 @@ ActiveRecord::Schema.define(version: 2021_07_26_124657) do
     t.string "product_type"
     t.integer "quantity"
     t.decimal "unit_price"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "sales", force: :cascade do |t|
+    t.json "order"
+    t.integer "total_amount"
+    t.string "payment_method", default: "Cash"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -64,4 +74,5 @@ ActiveRecord::Schema.define(version: 2021_07_26_124657) do
 
   add_foreign_key "line_items", "baskets"
   add_foreign_key "line_items", "products"
+  add_foreign_key "line_items", "sales"
 end

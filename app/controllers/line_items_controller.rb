@@ -1,4 +1,5 @@
 class LineItemsController < ApplicationController
+  before_action :authenticate_user!
   include CurrentBasket
   before_action :set_basket, only: %i[ create basket_data destroy ]
   #before_action :set_line_item, only: %i[ show edit update destroy ]

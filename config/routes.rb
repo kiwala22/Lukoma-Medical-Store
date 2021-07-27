@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :sales
   resources :line_items
   resources :baskets
   root to: "dashboard#index"
