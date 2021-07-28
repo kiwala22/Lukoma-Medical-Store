@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :sales
   resources :line_items
   resources :baskets
   root to: "dashboard#index"
@@ -9,11 +8,15 @@ Rails.application.routes.draw do
       get 'products/index'
       post 'products/create'
       delete 'products/:id', to: 'products#destroy'
+
+      get 'sales/index'
+      post 'sales/create'
     end
   end
 
   match "check_user" => "application#check_user", via: [:get]
   match "products" => "products#index", via: [:get]
+  match "sales" => "sales#index", via: [:get]
   match "basket" => "line_items#basket_data", via: [:get]
   match "clear_basket" => "line_items#destroy", via: [:delete]
   

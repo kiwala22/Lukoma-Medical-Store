@@ -20,6 +20,7 @@ import React, { useEffect, useState } from "react";
 import { Link, Route, Switch } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Products from "./Products";
+import Sales from "./Sales";
 
 const { Sider, Content, Header, Footer } = Layout;
 const { Text } = Typography;
@@ -110,7 +111,7 @@ const Base = (props) => {
     const csrf = document
       .querySelector("meta[name='csrf-token']")
       .getAttribute("content");
-    const url = "/sales";
+    const url = "/api/v1/sales/create";
     fetch(url, {
       method: "post",
       headers: {
@@ -267,7 +268,7 @@ const Base = (props) => {
             <Link to={"/products/"}>Products</Link>
           </Menu.Item>
           <Menu.Item key="3" icon={<DollarOutlined />}>
-            Sales
+            <Link to={"/sales/"}>Sales</Link>
           </Menu.Item>
         </Menu>
         <Menu
@@ -316,6 +317,7 @@ const Base = (props) => {
                   />
                 )}
               />
+              <Route path="/sales/" component={Sales} />
               <Route path={["/"]} component={Dashboard} />
             </Switch>
           </div>

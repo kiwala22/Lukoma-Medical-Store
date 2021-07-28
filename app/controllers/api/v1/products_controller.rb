@@ -3,7 +3,7 @@ class Api::V1::ProductsController < ApplicationController
     before_action :set_product, only: [:edit, :update, :destroy]
 
     def index
-        @products = Product.all
+        @products = Product.all.where("quantity > ?", 0).order("created_at DESC")
         render json: @products
     end
 
