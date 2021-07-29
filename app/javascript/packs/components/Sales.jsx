@@ -1,5 +1,5 @@
 import { PrinterOutlined } from "@ant-design/icons";
-import { Button, message, Table } from "antd";
+import { Button, Card, message, PageHeader, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import Moment from "react-moment";
 import Spinner from "./Spinner";
@@ -12,6 +12,11 @@ const Sales = (props) => {
   useEffect(() => loadSales(), []);
 
   const columns = [
+    {
+      title: "Reference",
+      dataIndex: "reference",
+      key: "reference",
+    },
     {
       title: "Sales",
       dataIndex: "products",
@@ -41,6 +46,11 @@ const Sales = (props) => {
       dataIndex: "paymentMethod",
       key: "paymentMethod",
       responsive: ["md"],
+    },
+    {
+      title: "Sale By",
+      dataIndex: "user",
+      key: "user",
     },
     {
       title: "Date Made",
@@ -84,6 +94,8 @@ const Sales = (props) => {
             totalAmount: product.total_amount,
             paymentMethod: product.payment_method,
             date: product.created_at,
+            reference: product.reference,
+            user: product.username,
           };
           setSales((prevSales) => {
             return [newEl, ...prevSales];
@@ -102,15 +114,21 @@ const Sales = (props) => {
 
   return (
     <>
-      <h1>Sales Catalogue</h1>
+      <PageHeader
+        className="site-page-header"
+        title="Sales"
+        subTitle="Sales Catalogue"
+      />
       {!isLoading && (
-        <Table
-          className="table-striped-rows"
-          dataSource={sales}
-          columns={columns}
-          pagination={{ pageSize: 25 }}
-          scroll={{ x: "100vw" }}
-        />
+        <Card>
+          <Table
+            className="table-striped-rows"
+            dataSource={sales}
+            columns={columns}
+            pagination={{ pageSize: 25 }}
+            scroll={{ x: "100vw" }}
+          />
+        </Card>
       )}
       {isLoading && <Spinner />}
     </>

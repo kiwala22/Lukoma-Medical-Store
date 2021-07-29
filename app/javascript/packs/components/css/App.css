@@ -1,5 +1,9 @@
 /* @import '~antd/dist/antd.css'; */
 
+.ant-card-actions > li {
+  padding-right: 12px !important;
+}
+
 .login-form {
   max-width: 300px;
   /* margin-left: 200px; */
@@ -65,11 +69,11 @@
 }
 
 .logo {
-  width: 200px;
-  min-height: 31px;
-  margin: 16px 24px 16px 0;
+  width: 300px;
+  min-height: 45px;
+  margin: 16px 24px 16px 5px;
   float: left;
-  background-image: url("../images/medical-logo-2.png");
+  background-image: url("../images/logo2.png");
   background-repeat: no-repeat;
 }
 

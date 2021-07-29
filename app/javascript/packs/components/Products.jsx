@@ -1,5 +1,14 @@
 import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Input, message, Popconfirm, Space, Table } from "antd";
+import {
+  Button,
+  Card,
+  Input,
+  message,
+  PageHeader,
+  Popconfirm,
+  Space,
+  Table,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import Highlighter from "react-highlight-words";
 import ProductForm from "./ProductForm";
@@ -10,7 +19,31 @@ const Products = (props) => {
   const [isRefreshing, setIsRefreshing] = useState(props.isRefreshing);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [visible, setVisible] = useState(false);
+  let searchInput;
   useEffect(() => setIsRefreshing(props.isRefreshing), [props.isRefreshing]);
+  useEffect(() => {
+    checkAbility();
+  }, []);
+
+  const checkAbility = () => {
+    const path = "/api/v1/check_ability";
+    fetch(path)
+      .then((data) => {
+        if (data.ok) {
+          return data.json();
+        }
+        throw new Error("Network error.");
+      })
+      .then((data) => {
+        if (data.status == "Authorized") {
+          setVisible(true);
+        } else {
+          setVisible(false);
+        }
+      })
+      .catch((err) => message.error("Error: " + err), 10);
+  };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -33,7 +66,7 @@ const Products = (props) => {
       <div style={{ padding: 8 }}>
         <Input
           ref={(node) => {
-            let searchInput = node;
+            searchInput = node;
           }}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
@@ -141,28 +174,27 @@ const Products = (props) => {
       title: "Actions",
       key: "action",
       render: (_text, record) => (
-        <Button type="primary" onClick={() => addProductToBasket(record.id)}>
-          <PlusCircleOutlined />
-          Sale
-        </Button>
+        <>
+          <Button type="primary" onClick={() => addProductToBasket(record.id)}>
+            <PlusCircleOutlined />
+            Sale
+          </Button>
+          <span></span>
+          {visible && (
+            <Popconfirm
+              title="Are you sure to delete this medicine?"
+              onConfirm={() => deleteProduct(record.id)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <a href="#" type="danger" style={{ float: "right" }}>
+                Delete{" "}
+              </a>
+            </Popconfirm>
+          )}
+        </>
       ),
       responsive: ["md"],
-    },
-    {
-      title: "Actions",
-      key: "action",
-      render: (_text, record) => (
-        <Popconfirm
-          title="Are you sure to delete this medicine?"
-          onConfirm={() => deleteProduct(record.id)}
-          okText="Yes"
-          cancelText="No"
-        >
-          <a href="#" type="danger">
-            Delete{" "}
-          </a>
-        </Popconfirm>
-      ),
     },
   ];
 
@@ -270,18 +302,26 @@ const Products = (props) => {
 
   return (
     <>
-      <h1>In Store Medicines</h1>
+      <PageHeader
+        className="site-page-header"
+        title="Store"
+        subTitle="Medicines Store"
+      />
       {!isLoading && (
         <>
-          <Table
-            className="table-striped-rows"
-            dataSource={products}
-            columns={columns}
-            pagination={{ pageSize: 5 }}
-            scroll={{ y: 300, x: "100vw" }}
-          />
-          <br />
-          <ProductForm reloadProducts={reloadProducts} />
+          <Card
+            actions={
+              visible && [<ProductForm reloadProducts={reloadProducts} />]
+            }
+          >
+            <Table
+              className="table-striped-rows"
+              dataSource={products}
+              columns={columns}
+              pagination={{ pageSize: 25 }}
+              scroll={{ x: "100vw" }}
+            />
+          </Card>
         </>
       )}
       {isLoading && <Spinner />}

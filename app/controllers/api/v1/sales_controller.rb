@@ -27,7 +27,10 @@ class Api::V1::SalesController < ApplicationController
       end
       @sale = Sale.new({
         order: order,
-        total_amount: total_amount
+        reference: generate_reference(),
+        total_amount: total_amount,
+        user_id: current_user.id,
+        username: current_user.username
       })
   
       if @sale.save
@@ -43,6 +46,14 @@ class Api::V1::SalesController < ApplicationController
       else
         render json: @sale.errors
       end
+    end
+
+    private
+    def generate_reference
+      begin
+        reference = rand(36**8).to_s(36).upcase
+      end while Sale.where(reference: reference).exists?
+      return "SAL-"+reference
     end
   
   end

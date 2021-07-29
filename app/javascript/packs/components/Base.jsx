@@ -260,14 +260,18 @@ const Base = (props) => {
         zeroWidthTriggerStyle={{ marginTop: 35 }}
       >
         <div className="logo" />
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
-          <Menu.Item key="1" icon={<BarChartOutlined />}>
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={[props.location.pathname]}
+        >
+          <Menu.Item key="/" icon={<BarChartOutlined />}>
             <Link to={"/"}>DashBoard</Link>
           </Menu.Item>
-          <Menu.Item key="2" icon={<AppstoreOutlined />}>
+          <Menu.Item key="/products/" icon={<AppstoreOutlined />}>
             <Link to={"/products/"}>Products</Link>
           </Menu.Item>
-          <Menu.Item key="3" icon={<DollarOutlined />}>
+          <Menu.Item key="/sales/" icon={<DollarOutlined />}>
             <Link to={"/sales/"}>Sales</Link>
           </Menu.Item>
         </Menu>

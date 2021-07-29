@@ -1,4 +1,5 @@
 const { environment } = require('@rails/webpacker')
+const jquery = require('./plugins/jquery')
 
 const less_loader = {
     test: /\.less$/,
@@ -19,4 +20,5 @@ const less_loader = {
 };
 environment.loaders.append('less', less_loader)
 
+environment.plugins.prepend('jquery', jquery)
 module.exports = environment

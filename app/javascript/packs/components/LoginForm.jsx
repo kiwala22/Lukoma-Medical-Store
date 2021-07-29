@@ -11,7 +11,7 @@ const LoginForm = (props) => {
   const userLoginSuccess = () => {
     return new Promise((resolve, reject) => {
       axios
-        .get("/check_user", {})
+        .get("/api/v1/check_user", {})
         .then((response) => {
           if (response.data.email) {
             resolve(response.data.email);
@@ -42,7 +42,8 @@ const LoginForm = (props) => {
         }, 2000);
       })
       .catch(() => {
-        message.error("Invalid Email or Password Combination", 5);
+        message.error("Invalid Username or Password Combination", 5);
+        setLoading(false);
       });
   };
 
@@ -65,17 +66,17 @@ const LoginForm = (props) => {
           onSubmit={(e) => e.preventDefault()}
         >
           <Form.Item
-            name="email"
+            name="username"
             rules={[
               {
                 required: true,
-                message: "Please input your Email!",
+                message: "Please input your Username!",
               },
             ]}
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Email"
+              placeholder="Username"
             />
           </Form.Item>
           <Form.Item

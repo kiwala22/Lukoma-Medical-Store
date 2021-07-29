@@ -1,4 +1,4 @@
-import { LoadingOutlined } from "@ant-design/icons";
+import { Loading3QuartersOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import React from "react";
 
@@ -7,14 +7,16 @@ const Spinner = () => {
     <>
       <div
         style={{
+          margin: "20px 0px",
+          marginBottom: 20,
+          padding: "30px 50px",
           textAlign: "center",
-          position: "absolute",
-          left: "50%",
-          top: "50%",
+          // background: "rgba(0, 0, 0, 0.05)",
+          borderRadius: "4px",
         }}
       >
         <Spin
-          indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
+          indicator={<Loading3QuartersOutlined style={{ fontSize: 40 }} spin />}
           size="large"
         />
       </div>

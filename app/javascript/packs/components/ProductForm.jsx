@@ -49,7 +49,7 @@ const ProductForm = (props) => {
       <Button
         type="primary"
         ghost
-        style={{ float: "right" }}
+        style={{ float: "right", paddingRight: 10 }}
         onClick={showModal}
       >
         <PlusCircleOutlined /> New Product
