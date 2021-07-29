@@ -1,7 +1,7 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.16.0"
 
-set :application, "Lukoma Medical Store"
+set :application, "Lukoma-Medical-Store"
 set :repo_url, "git@bitbucket.org:kiwala22/lukoma-medical-store.git"
 
 # Default branch is :master
