@@ -2,6 +2,8 @@ import { PrinterOutlined } from "@ant-design/icons";
 import { Button, Card, message, PageHeader, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import Moment from "react-moment";
+import Receipt from "./Receipt";
+import Utilities from "./reusables/Utilities";
 import Spinner from "./Spinner";
 
 const Sales = (props) => {
@@ -23,14 +25,12 @@ const Sales = (props) => {
       key: "products",
       render: (products) => (
         <span>
-          {products.map((product) => {
+          {products.map((product, index) => {
             return (
-              <>
-                <li
-                  key={Math.random().toString(36).substring(5)}
-                >{`${product.quantity} x ${product.name}  ${product.amount}`}</li>
+              <span key={index}>
+                <li>{`${product.quantity} x ${product.name}  ${product.amount}`}</li>
                 <br />
-              </>
+              </span>
             );
           })}
         </span>
@@ -62,19 +62,16 @@ const Sales = (props) => {
       title: "Actions",
       key: "action",
       render: (record) => (
-        <Button type="primary" ghost onClick={() => generateReceipt(record.id)}>
-          <PrinterOutlined />
-          Receipt
-        </Button>
+        <Receipt data={record}>
+          <Button type="primary" ghost>
+            <PrinterOutlined />
+            Receipt
+          </Button>
+        </Receipt>
       ),
       responsive: ["md"],
     },
   ];
-
-  const generateReceipt = (id) => {
-    // Method will be used in generated printable receipt
-    console.log(`The record ID is ${id}`);
-  };
 
   const loadSales = () => {
     const url = path + "index";
@@ -126,7 +123,7 @@ const Sales = (props) => {
             dataSource={sales}
             columns={columns}
             pagination={{ pageSize: 25 }}
-            scroll={{ x: "100vw" }}
+            scroll={Utilities.isMobile() && { x: "100vw" }}
           />
         </Card>
       )}

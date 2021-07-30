@@ -17,7 +17,9 @@ class Api::V1::ReportsController < ApplicationController
 
   def averages
     total_daily = Sale.where("created_at >=? AND created_at <= ?", Date.today.beginning_of_day, Date.today.end_of_day).sum(:total_amount)
-    average_monthly = (total_daily / 30).to_f
+    total_month = Sale.where("created_at >=? AND created_at <= ?", Date.today.beginning_of_month, Date.today.end_of_month).sum(:total_amount)
+    days_in_month = Time.now.end_of_month.day
+    average_monthly = (total_month / days_in_month).to_f
 
     @averages = {daily: total_daily, average: average_monthly}
 

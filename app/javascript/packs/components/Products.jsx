@@ -12,6 +12,7 @@ import {
 import React, { useEffect, useState } from "react";
 import Highlighter from "react-highlight-words";
 import ProductForm from "./ProductForm";
+import Utilities from "./reusables/Utilities";
 import Spinner from "./Spinner";
 
 const Products = (props) => {
@@ -319,7 +320,7 @@ const Products = (props) => {
               dataSource={products}
               columns={columns}
               pagination={{ pageSize: 25 }}
-              scroll={{ x: "100vw" }}
+              scroll={Utilities.isMobile() && { x: "100vw" }}
             />
           </Card>
         </>

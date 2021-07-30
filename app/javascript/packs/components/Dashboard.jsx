@@ -94,7 +94,6 @@ const Dashboard = (props) => {
         throw new Error("Network error.");
       })
       .then((data) => {
-        console.log(data);
         data.forEach((product) => {
           const newEl = {
             key: product.batch_no,
@@ -245,10 +244,8 @@ const Dashboard = (props) => {
                 <Card bordered={false} align="center">
                   <div>
                     <span style={{ color: "darkslategray", fontSize: 15 }}>
-                      {lowStock.map((product) => (
-                        <li key={Math.random().toString(36).substring(5)}>
-                          {product["name"]}
-                        </li>
+                      {lowStock.map((product, index) => (
+                        <li key={index}>{product["name"]}</li>
                       ))}
                     </span>
                   </div>

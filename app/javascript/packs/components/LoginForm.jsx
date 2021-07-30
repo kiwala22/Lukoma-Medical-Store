@@ -98,13 +98,9 @@ const LoginForm = (props) => {
               <Button
                 type="primary"
                 htmlType="submit"
+                block
                 className="login-form-button"
-                // onClick={onClickBtn}
                 loading={loading}
-                // disabled={
-                //     !form.isFieldsTouched(true) ||
-                //     !!form.getFieldsError().filter(({ errors }) => errors.length).length
-                // }
               >
                 Log in
               </Button>

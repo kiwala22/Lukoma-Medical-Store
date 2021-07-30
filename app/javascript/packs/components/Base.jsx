@@ -19,9 +19,10 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, Route, Switch } from "react-router-dom";
 import Dashboard from "./Dashboard";
+import Image from "./images/logo.png";
 import Products from "./Products";
+import Utilities from "./reusables/Utilities";
 import Sales from "./Sales";
-
 const { Sider, Content, Header, Footer } = Layout;
 const { Text } = Typography;
 
@@ -59,7 +60,7 @@ const Base = (props) => {
   const onBreakpoint = (broken) => {
     if (broken) {
       setCollapseWidth("0");
-      setWidth("80");
+      setWidth("200");
     } else {
       setCollapseWidth("80");
       setWidth("200");
@@ -246,67 +247,101 @@ const Base = (props) => {
   };
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={onCollapse}
-        breakpoint="xs"
-        collapsedWidth={collapseWidth}
-        width={width}
-        onBreakpoint={(broken) => {
-          onBreakpoint(broken);
+    <Layout>
+      <Header
+        className="header"
+        style={{
+          position: "fixed",
+          zIndex: 2,
+          width: "100%",
+          padding: "0 50px",
         }}
-        zeroWidthTriggerStyle={{ marginTop: 35 }}
       >
-        <div className="logo" />
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={[props.location.pathname]}
-        >
-          <Menu.Item key="/" icon={<BarChartOutlined />}>
-            <Link to={"/"}>DashBoard</Link>
-          </Menu.Item>
-          <Menu.Item key="/products/" icon={<AppstoreOutlined />}>
-            <Link to={"/products/"}>Products</Link>
-          </Menu.Item>
-          <Menu.Item key="/sales/" icon={<DollarOutlined />}>
-            <Link to={"/sales/"}>Sales</Link>
-          </Menu.Item>
-        </Menu>
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={[""]}
-          onClick={handleLogout}
-          onSubmit={(e) => {
-            e.preventDefault();
+        <div className="logo">
+          <span style={{ color: "#fff", fontSize: 20 }}>
+            <img src={Image} />
+            Med Store
+          </span>
+        </div>
+        <span style={{ float: "right", paddingRight: 10 }}>
+          <Button type="primary" ghost onClick={openBasket}>
+            <ShoppingCartOutlined />
+            Basket
+          </Button>
+        </span>
+      </Header>
+      <Layout>
+        <Sider
+          collapsible
+          collapsed={collapsed}
+          onCollapse={onCollapse}
+          breakpoint="xs"
+          collapsedWidth={collapseWidth}
+          width={width}
+          onBreakpoint={(broken) => {
+            onBreakpoint(broken);
+          }}
+          className="site-layout-background"
+          zeroWidthTriggerStyle={{ marginTop: 35 }}
+          style={{
+            left: 0,
+            zIndex: 1000,
+            top: 60,
+            position: "fixed",
+            display: "block",
+            bottom: 0,
+            borderRight: 0,
           }}
         >
-          <Menu.Item key="1" icon={<LogoutOutlined />}>
-            Sign Out
-          </Menu.Item>
-        </Menu>
-      </Sider>
-      <Layout className="site-layout">
-        <Header className="site-layout-background-head" style={{ padding: 0 }}>
-          <span style={{ float: "right", paddingRight: 10 }}>
-            <Button type="primary" ghost onClick={openBasket}>
-              <ShoppingCartOutlined />
-              Basket
-            </Button>
-          </span>
-        </Header>
+          <Menu
+            theme="dark"
+            mode="inline"
+            defaultSelectedKeys={[props.location.pathname]}
+          >
+            <Menu.Item key="/" icon={<BarChartOutlined />}>
+              <Link to={"/"}>DashBoard</Link>
+            </Menu.Item>
+            <Menu.Item key="/products/" icon={<AppstoreOutlined />}>
+              <Link to={"/products/"}>Products</Link>
+            </Menu.Item>
+            <Menu.Item key="/sales/" icon={<DollarOutlined />}>
+              <Link to={"/sales/"}>Sales</Link>
+            </Menu.Item>
+          </Menu>
+          <Menu
+            theme="dark"
+            mode="inline"
+            defaultSelectedKeys={[""]}
+            onClick={handleLogout}
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <Menu.Item key="1" icon={<LogoutOutlined />}>
+              Sign Out
+            </Menu.Item>
+          </Menu>
+        </Sider>
         <Content
-          className="site-layout-background"
-          style={{ margin: "24px 16px 0", overflow: "initial", padding: 24 }}
+          style={{
+            marginLeft: collapsed
+              ? Utilities.isMobile()
+                ? 10
+                : 90
+              : Utilities.isMobile()
+              ? 10
+              : 210,
+            marginRight: Utilities.isMobile() && 10,
+            overflowX: "hidden",
+          }}
         >
           <div
             style={{
               paddingTop: 12,
               paddingBottom: 0,
               height: "100%",
+              marginRight: 0,
+              // overflowY: "scroll",
               transition: "margin-right 0.3s ease",
             }}
           >
@@ -326,9 +361,6 @@ const Base = (props) => {
             </Switch>
           </div>
         </Content>
-        <Footer style={{ textAlign: "center", fontSize: 18 }}>
-          Lukoma Medical Store ©2021
-        </Footer>
       </Layout>
     </Layout>
   );

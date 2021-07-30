@@ -64,6 +64,7 @@ const ProductForm = (props) => {
         scrollable={true}
         closeIcon={<CloseOutlined />}
         confirmLoading={true}
+        maskClosable={false}
       >
         <Form ref={formRef} layout="vertical" onFinish={onFinish}>
           <Form.Item
