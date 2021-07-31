@@ -333,6 +333,7 @@ const Base = (props) => {
               : 210,
             marginRight: Utilities.isMobile() && 10,
             overflowX: "hidden",
+            marginTop: Utilities.isMobile() ? 50 : 70,
           }}
         >
           <div
