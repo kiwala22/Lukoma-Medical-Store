@@ -262,13 +262,13 @@ const Base = (props) => {
             <img src={Image} />
             Med Store
           </span>
+          <span style={{ float: "right", paddingRight: 10 }}>
+            <Button type="primary" ghost onClick={openBasket}>
+              <ShoppingCartOutlined />
+              Basket
+            </Button>
+          </span>
         </div>
-        <span style={{ float: "right", paddingRight: 10 }}>
-          <Button type="primary" ghost onClick={openBasket}>
-            <ShoppingCartOutlined />
-            Basket
-          </Button>
-        </span>
       </Header>
       <Layout>
         <Sider

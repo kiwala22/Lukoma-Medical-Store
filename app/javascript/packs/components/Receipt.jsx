@@ -53,9 +53,9 @@ class Receipt extends Component {
           }
         >
           <div id="receipt" ref={this.printableEl} style={{ margin: "10px" }}>
-            <Text strong>LUKOMA MEDICAL CLINIC. LTD</Text>
+            <Text strong>LUKOMA MEDICAL CLINIC & LAB SERVICES</Text>
             <Text style={{ display: "block" }}>Medical Store Group</Text>
-            <Text style={{ display: "block" }}>P.O BOX 447, KAMPALA</Text>
+            <Text style={{ display: "block" }}>Nkumba - Lyamutundwe</Text>
             <Text style={{ display: "block" }}>TEL: +256 757 032 427</Text>
             <Text style={{ display: "block" }}>
               Email: enochbogere88@gmail.com
