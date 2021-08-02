@@ -33,15 +33,14 @@ const ProductForm = (props) => {
         if (data.ok) {
           message.success("Product Added Successfully.", 5);
           closeModal();
-
           return data.json();
         }
-        throw new Error("Network error.");
+        throw new Error("Something went wrong.");
       })
       .then(() => {
         props.reloadProducts();
       })
-      .catch((err) => message.error("Error: " + err));
+      .catch((err) => message.error(err));
   };
 
   return (
@@ -77,32 +76,40 @@ const ProductForm = (props) => {
 
           <Form.Item
             name="name"
-            label="Medicine Name"
-            rules={[{ required: true, message: "Please input medicine name!" }]}
+            label="Product Name"
+            rules={[{ required: true, message: "Please input product name!" }]}
           >
-            <Input placeholder="Medicine Name" />
+            <Input placeholder="Product Name" />
           </Form.Item>
 
           <Form.Item
             name="product_type"
-            label="Medicine Type"
+            label="Product Category"
             rules={[
               {
                 required: true,
-                message: "Please select a medicine type!",
+                message: "Please select a product category!",
               },
             ]}
           >
             <Select
               showSearch
-              placeholder="Select Medicine Type"
+              placeholder="Select Product Category"
               optionFilterProp="children"
               style={{ width: "100%" }}
             >
               <Option value="Tablets">Tablets</Option>
+              <Option value="Capsules">Capsules</Option>
               <Option value="Syrup">Syrup</Option>
               <Option value="Tube">Tube</Option>
               <Option value="Injection">Injection</Option>
+              <Option value="Solution">Solution</Option>
+              <Option value="Powder">Powder</Option>
+              <Option value="Aerosol">Aerosol</Option>
+              <Option value="Suppositories">Suppositories</Option>
+              <Option value="Syringe">Syringe</Option>
+              <Option value="Needs">Needs</Option>
+              <Option value="Others">Others</Option>
             </Select>
           </Form.Item>
 
@@ -127,9 +134,9 @@ const ProductForm = (props) => {
           <Form.Item
             name="expiry_date"
             label="Expiry Date"
-            rules={[
-              { required: true, message: "Please select an expiry date!" },
-            ]}
+            // rules={[
+            //   { required: true, message: "Please select an expiry date!" },
+            // ]}
           >
             <DatePicker
               style={{ width: "100%" }}

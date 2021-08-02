@@ -5,7 +5,7 @@ ActiveAdmin.register Product do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-  # permit_params :batch_no, :name, :expiry_date, :product_type, :quantity, :unit_price
+  permit_params :batch_no, :name, :expiry_date, :product_type, :quantity, :unit_price
   #
   # or
   #

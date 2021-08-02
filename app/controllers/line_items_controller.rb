@@ -8,7 +8,8 @@ class LineItemsController < ApplicationController
   # POST /line_items or /line_items.json
   def create
     product = Product.find(params[:product_id])
-    @line_item = @basket.add_product(product)
+    quantity = (params[:quantity]).to_i
+    @line_item = @basket.add_product(product, quantity)
 
     if @line_item.save
       render json: @line_item
@@ -50,6 +51,6 @@ class LineItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def line_item_params
-      params.require(:line_item).permit(:product_id)
+      params.require(:line_item).permit(:product_id, :quantity)
     end
 end

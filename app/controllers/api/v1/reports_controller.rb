@@ -1,6 +1,6 @@
 class Api::V1::ReportsController < ApplicationController
   before_action :authenticate_user!
-
+  include CurrentBasket
   def sale_totals
     sales_amounts = []
     date_labels = []

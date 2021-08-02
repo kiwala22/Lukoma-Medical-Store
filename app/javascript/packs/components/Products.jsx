@@ -22,6 +22,7 @@ const Products = (props) => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [visible, setVisible] = useState(false);
   let searchInput;
+  const quantityRef = React.createRef();
   useEffect(() => setIsRefreshing(props.isRefreshing), [props.isRefreshing]);
   useEffect(() => {
     checkAbility();
@@ -150,7 +151,7 @@ const Products = (props) => {
       ...getColumnSearchProps("name"),
     },
     {
-      title: "Product Type",
+      title: "Product Category",
       dataIndex: "productType",
       key: "product_type",
     },
@@ -176,10 +177,30 @@ const Products = (props) => {
       key: "action",
       render: (_text, record) => (
         <>
-          <Button type="primary" onClick={() => addProductToBasket(record.id)}>
-            <PlusCircleOutlined />
-            Sale
-          </Button>
+          <Popconfirm
+            title={
+              <div>
+                <Input
+                  placeholder="Enter desired Quantity"
+                  type="number"
+                  ref={quantityRef}
+                />
+              </div>
+            }
+            onConfirm={() => {
+              addProductToBasket(record.id, quantityRef.current.input.value);
+            }}
+            okText="Confirm"
+            cancelText="Cancel"
+          >
+            <Button
+              type="primary"
+              // onClick={() => addProductToBasket(record.id)}
+            >
+              <PlusCircleOutlined />
+              Sale
+            </Button>
+          </Popconfirm>
           <span></span>
           {visible && (
             <Popconfirm
@@ -215,7 +236,7 @@ const Products = (props) => {
         if (data.ok) {
           return data.json();
         }
-        throw new Error("Network error.");
+        throw new Error("Something Went Wrong.");
       })
       .then((data) => {
         data.forEach((product) => {
@@ -235,7 +256,7 @@ const Products = (props) => {
         });
         setIsLoading(false);
       })
-      .catch((err) => message.error("Error: " + err), 10);
+      .catch((err) => message.error(err), 10);
   };
 
   const reloadProducts = () => {
@@ -249,12 +270,13 @@ const Products = (props) => {
     setIsRefreshing(!isRefreshing);
   }
 
-  const addProductToBasket = (id) => {
+  const addProductToBasket = (id, quantity) => {
+    quantityRef.current.input.value = null;
     const csrf = document
       .querySelector("meta[name='csrf-token']")
       .getAttribute("content");
     const url = "/line_items";
-    let values = { product_id: id };
+    let values = { product_id: id, quantity: quantity };
     fetch(url, {
       method: "post",
       headers: {

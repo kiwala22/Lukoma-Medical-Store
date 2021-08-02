@@ -80,7 +80,7 @@ const Sales = (props) => {
         if (data.ok) {
           return data.json();
         }
-        throw new Error("Network error.");
+        throw new Error("Something Went Wrong.");
       })
       .then((data) => {
         data.forEach((product) => {
@@ -100,7 +100,7 @@ const Sales = (props) => {
         });
         setIsLoading(false);
       })
-      .catch((err) => message.error("Error: " + err), 10);
+      .catch((err) => message.error(err), 10);
   };
 
   const reloadSales = () => {
