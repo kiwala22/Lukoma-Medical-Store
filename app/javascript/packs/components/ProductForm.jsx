@@ -1,6 +1,7 @@
 import { CloseOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Form, Input, message, Modal, Select } from "antd";
 import React, { useState } from "react";
+import Requests from "./reusables/Requests";
 const { Option } = Select;
 
 const ProductForm = (props) => {
@@ -17,30 +18,20 @@ const ProductForm = (props) => {
   };
 
   const onFinish = (values) => {
-    const csrf = document
-      .querySelector("meta[name='csrf-token']")
-      .getAttribute("content");
-    const url = path;
-    fetch(url, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": csrf,
-      },
-      body: JSON.stringify(values),
-    })
-      .then((data) => {
-        if (data.ok) {
+    Requests.isPostRequest(path, values)
+      .then((response) => {
+        if (response.data.status == "Success") {
           message.success("Product Added Successfully.", 5);
           closeModal();
-          return data.json();
+          props.reloadProducts();
+        } else {
+          let error = response.data.errors[1][0];
+          message.error(error, 5);
         }
-        throw new Error("Something went wrong.");
       })
-      .then(() => {
-        props.reloadProducts();
-      })
-      .catch((err) => message.error(err));
+      .catch((err) => {
+        message.error(err, 5);
+      });
   };
 
   return (

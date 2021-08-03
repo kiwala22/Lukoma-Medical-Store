@@ -2,6 +2,7 @@ import { DollarOutlined } from "@ant-design/icons";
 import { Avatar, Card, Col, message, PageHeader, Row, Table } from "antd";
 import ReactECharts from "echarts-for-react";
 import React, { useEffect, useState } from "react";
+import Requests from "./reusables/Requests";
 import Spinner from "./Spinner";
 
 const Dashboard = (props) => {
@@ -30,16 +31,10 @@ const Dashboard = (props) => {
 
   const loadSalesTotals = () => {
     const path = "/api/v1/reports/sale_totals";
-    fetch(path)
-      .then((data) => {
-        if (data.ok) {
-          return data.json();
-        }
-        throw new Error("Something Went Wrong.");
-      })
-      .then((data) => {
-        setDates(data.labels);
-        setAmounts(data.totals);
+    Requests.isGetRequest(path)
+      .then((response) => {
+        setDates(response.data.labels);
+        setAmounts(response.data.totals);
         setIsLoading(false);
       })
       .catch((err) => message.error(err), 10);
@@ -47,30 +42,19 @@ const Dashboard = (props) => {
 
   const loadSalesAverages = () => {
     const path = "/api/v1/reports/averages";
-    fetch(path)
-      .then((data) => {
-        if (data.ok) {
-          return data.json();
-        }
-        throw new Error("Network error.");
+    Requests.isGetRequest(path)
+      .then((response) => {
+        setDailyAmount(response.data.daily);
+        setMonthlyAverage(response.data.average);
       })
-      .then((data) => {
-        setDailyAmount(data.daily);
-        setMonthlyAverage(data.average);
-      })
-      .catch((err) => message.error("Error: " + err), 10);
+      .catch((err) => message.error(err), 10);
   };
 
   const loadOutOfStock = () => {
     const path = "/api/v1/reports/low_stock_products";
-    fetch(path)
-      .then((data) => {
-        if (data.ok) {
-          return data.json();
-        }
-        throw new Error("Network error.");
-      })
-      .then((data) => {
+    Requests.isGetRequest(path)
+      .then((response) => {
+        let data = response.data;
         data.forEach((product) => {
           const newEl = {
             key: product,
@@ -81,19 +65,14 @@ const Dashboard = (props) => {
           });
         });
       })
-      .catch((err) => message.error("Error: " + err), 10);
+      .catch((err) => message.error(err), 10);
   };
 
   const loadExpiredStock = () => {
     const path = "/api/v1/reports/expired_products";
-    fetch(path)
-      .then((data) => {
-        if (data.ok) {
-          return data.json();
-        }
-        throw new Error("Network error.");
-      })
-      .then((data) => {
+    Requests.isGetRequest(path)
+      .then((response) => {
+        let data = response.data;
         data.forEach((product) => {
           const newEl = {
             key: product.batch_no,

@@ -9,12 +9,17 @@ class LineItemsController < ApplicationController
   def create
     product = Product.find(params[:product_id])
     quantity = (params[:quantity]).to_i
-    @line_item = @basket.add_product(product, quantity)
+    if (quantity <= product.quantity)
+      @line_item = @basket.add_product(product, quantity)
 
-    if @line_item.save
-      render json: @line_item
+      if @line_item.save
+        render json: {line_item: @line_item, status: "Success"}
+      else
+        render json: @line_item.errors
+      end
     else
-      render json: @line_item.errors
+      render json: {status: "Number more than items in stock"}
+      return
     end
   end
 

@@ -1,17 +1,16 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input, message } from "antd";
-import axios from "axios";
 import React, { useState } from "react";
-import setAxiosHeaders from "./AxiosHeaders";
+import Requests from "./reusables/Requests";
 
 const LoginForm = (props) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
   const userLoginSuccess = () => {
+    let path = "/api/v1/check_user";
     return new Promise((resolve, reject) => {
-      axios
-        .get("/api/v1/check_user", {})
+      Requests.isGetRequest(path)
         .then((response) => {
           if (response.data.email) {
             resolve(response.data.email);
@@ -27,11 +26,9 @@ const LoginForm = (props) => {
 
   const handleLogin = (values) => {
     setLoading(true);
-    setAxiosHeaders();
-    axios
-      .post("/users/sign_in", {
-        user: values,
-      })
+    let path = "/users/sign_in";
+    let variables = { user: values };
+    Requests.isPostRequest(path, variables)
       .then(async () => {
         await userLoginSuccess();
         message.success("Login Successful", 8);
@@ -45,6 +42,7 @@ const LoginForm = (props) => {
         message.error("Invalid Username or Password Combination", 5);
         setLoading(false);
       });
+    setLoading(false);
   };
 
   return (

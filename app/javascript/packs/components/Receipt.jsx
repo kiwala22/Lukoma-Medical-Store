@@ -3,6 +3,7 @@ import { Button, Modal, Table, Typography } from "antd";
 import React, { Component } from "react";
 import Moment from "react-moment";
 import ReactToPrint from "react-to-print";
+import shortUUID from "short-uuid";
 const { Text } = Typography;
 
 class Receipt extends Component {
@@ -75,13 +76,13 @@ class Receipt extends Component {
             </Text>
             <Text style={{ display: "block" }}>
               Payment Method:{" "}
-              <Text strong>{this.props.data.paymentMethod}</Text>
+              <Text strong>{this.props.data.payment_method}</Text>
             </Text>
             <Text style={{ display: "block" }}>
               Purchase Date:{" "}
               <Text strong>
                 <Moment format="D MMM YYYY - HH:mm">
-                  {this.props.data.date}
+                  {this.props.data.created_at}
                 </Moment>
               </Text>
             </Text>
@@ -89,8 +90,10 @@ class Receipt extends Component {
               style={{ marginTop: "10px" }}
               pagination={false}
               size="small"
-              rowKey="bill"
-              dataSource={this.props.data.products}
+              rowKey={() => {
+                return shortUUID.generate();
+              }}
+              dataSource={this.props.data.order}
               columns={[
                 {
                   title: "PDT",
@@ -111,10 +114,10 @@ class Receipt extends Component {
               bordered={false}
             />
             <Text style={{ display: "block", marginTop: "15px" }}>
-              Total Amount: <Text strong>{this.props.data.totalAmount}</Text>
+              Total Amount: <Text strong>{this.props.data.total_amount}</Text>
             </Text>
             <Text style={{ display: "block", marginTop: "15px" }}>
-              Served by: <Text strong>{this.props.data.user}</Text>
+              Served by: <Text strong>{this.props.data.username}</Text>
             </Text>
           </div>
         </Modal>

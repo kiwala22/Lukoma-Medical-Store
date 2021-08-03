@@ -11,7 +11,9 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import Highlighter from "react-highlight-words";
+import shortUUID from "short-uuid";
 import ProductForm from "./ProductForm";
+import Requests from "./reusables/Requests";
 import Utilities from "./reusables/Utilities";
 import Spinner from "./Spinner";
 
@@ -30,21 +32,15 @@ const Products = (props) => {
 
   const checkAbility = () => {
     const path = "/api/v1/check_ability";
-    fetch(path)
-      .then((data) => {
-        if (data.ok) {
-          return data.json();
-        }
-        throw new Error("Network error.");
-      })
-      .then((data) => {
-        if (data.status == "Authorized") {
+    Requests.isGetRequest(path)
+      .then((response) => {
+        if (response.data.status == "Authorized") {
           setVisible(true);
         } else {
           setVisible(false);
         }
       })
-      .catch((err) => message.error("Error: " + err), 10);
+      .catch((err) => message.error(err), 10);
   };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -140,7 +136,7 @@ const Products = (props) => {
   const columns = [
     {
       title: "Batch No#",
-      dataIndex: "batchNo",
+      dataIndex: "batch_no",
       key: "batch",
       ...getColumnSearchProps("batchNo"),
     },
@@ -152,7 +148,7 @@ const Products = (props) => {
     },
     {
       title: "Product Category",
-      dataIndex: "productType",
+      dataIndex: "product_type",
       key: "product_type",
     },
     {
@@ -162,13 +158,13 @@ const Products = (props) => {
     },
     {
       title: "Unit Price",
-      dataIndex: "unitPrice",
+      dataIndex: "unit_price",
       key: "unit_price",
       responsive: ["md"],
     },
     {
       title: "Expiry Date",
-      dataIndex: "expiryDate",
+      dataIndex: "expiry_date",
       key: "expiry_date",
       responsive: ["md"],
     },
@@ -229,32 +225,16 @@ const Products = (props) => {
   }, []);
 
   const loadProducts = () => {
-    // setIsLoading(true);
     const url = path + "index";
-    fetch(url)
-      .then((data) => {
-        if (data.ok) {
-          return data.json();
+    Requests.isGetRequest(url)
+      .then((response) => {
+        if (response.data.status == "Success") {
+          let data = response.data.products;
+          setProducts(data);
+          setIsLoading(false);
+        } else {
+          message.error("Failed to load. Try Again.", 10);
         }
-        throw new Error("Something Went Wrong.");
-      })
-      .then((data) => {
-        data.forEach((product) => {
-          const newEl = {
-            key: product.id,
-            id: product.id,
-            batchNo: product.batch_no,
-            name: product.name,
-            productType: product.product_type,
-            quantity: product.quantity,
-            unitPrice: product.unit_price,
-            expiryDate: product.expiry_date,
-          };
-          setProducts((prevProducts) => {
-            return [newEl, ...prevProducts];
-          });
-        });
-        setIsLoading(false);
       })
       .catch((err) => message.error(err), 10);
   };
@@ -272,55 +252,33 @@ const Products = (props) => {
 
   const addProductToBasket = (id, quantity) => {
     quantityRef.current.input.value = null;
-    const csrf = document
-      .querySelector("meta[name='csrf-token']")
-      .getAttribute("content");
     const url = "/line_items";
     let values = { product_id: id, quantity: quantity };
-    fetch(url, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": csrf,
-      },
-      body: JSON.stringify(values),
-    })
-      .then((data) => {
-        if (data.ok) {
+    Requests.isPostRequest(url, values)
+      .then((response) => {
+        if (response.data.status == "Success") {
           message.success("Product Added to Basket.", 2);
-
-          return data.json();
+          props.reloadBasket();
+        } else {
+          message.error(response.data.status, 2);
         }
-        throw new Error("Network error.");
       })
-      .then(() => {
-        props.reloadBasket();
-      })
-      .catch((err) => message.error("Error: " + err));
+      .catch((err) => message.error(err, 5));
   };
 
   const deleteProduct = (id) => {
-    const csrf = document
-      .querySelector("meta[name='csrf-token']")
-      .getAttribute("content");
     const url = path + `${id}`;
-
-    fetch(url, {
-      method: "delete",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": csrf,
-      },
-    })
-      .then((data) => {
-        if (data.ok) {
+    let values = {};
+    Requests.isDeleteRequest(url, values)
+      .then((response) => {
+        if (response.data.status == "OK") {
           reloadProducts();
-          message.success("Product Removed.");
-          return data.json();
+          message.success("Product Removed.", 2);
+        } else {
+          message.error("Failed. Try Again.", 2);
         }
-        throw new Error("Network error.");
       })
-      .catch((err) => message.error("Error: " + err));
+      .catch((err) => message.error(err), 5);
   };
 
   return (
@@ -343,6 +301,10 @@ const Products = (props) => {
               columns={columns}
               pagination={{ pageSize: 25 }}
               scroll={Utilities.isMobile() && { x: "100vw" }}
+              bordered
+              rowKey={() => {
+                return shortUUID.generate();
+              }}
             />
           </Card>
         </>

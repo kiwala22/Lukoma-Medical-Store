@@ -3,6 +3,8 @@ import { Button, Card, message, PageHeader, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import Moment from "react-moment";
 import Receipt from "./Receipt";
+import FormatOrders from "./reusables/FormatOrders";
+import Requests from "./reusables/Requests";
 import Utilities from "./reusables/Utilities";
 import Spinner from "./Spinner";
 
@@ -13,92 +15,98 @@ const Sales = (props) => {
 
   useEffect(() => loadSales(), []);
 
+  const mergeCells = (value, row) => {
+    return {
+      children: value,
+      props: {
+        rowSpan: row.rowSpan,
+      },
+    };
+  };
+
   const columns = [
     {
       title: "Reference",
       dataIndex: "reference",
       key: "reference",
+      render: mergeCells,
     },
     {
-      title: "Sales",
-      dataIndex: "products",
-      key: "products",
-      render: (products) => (
-        <span>
-          {products.map((product, index) => {
-            return (
-              <span key={index}>
-                <li>{`${product.quantity} x ${product.name}  ${product.amount}`}</li>
-                <br />
-              </span>
-            );
-          })}
-        </span>
-      ),
+      title: "Product",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+    {
+      title: "Amount @",
+      dataIndex: "amount",
+      key: "amount",
     },
     {
       title: "Total Amount",
-      dataIndex: "totalAmount",
+      dataIndex: "total_amount",
       key: "totalAmount",
+      render: mergeCells,
     },
     {
       title: "Payment Method",
-      dataIndex: "paymentMethod",
+      dataIndex: "payment_method",
       key: "paymentMethod",
+      render: mergeCells,
       responsive: ["md"],
     },
     {
       title: "Sale By",
-      dataIndex: "user",
+      dataIndex: "username",
       key: "user",
+      render: mergeCells,
     },
     {
       title: "Date Made",
-      dataIndex: "date",
+      dataIndex: "created_at",
       key: "date",
-      render: (date) => <Moment format="D MMM YYYY - HH:mm">{date}</Moment>,
+      render: (date, row) => {
+        return {
+          children: <Moment format="D MMM YYYY - HH:mm">{date}</Moment>,
+          props: { rowSpan: row.rowSpan },
+        };
+      },
     },
     {
       title: "Actions",
       key: "action",
-      render: (record) => (
-        <Receipt data={record}>
-          <Button type="primary" ghost>
-            <PrinterOutlined />
-            Receipt
-          </Button>
-        </Receipt>
-      ),
+      render: (record, row) => {
+        return {
+          children: (
+            <Receipt data={row}>
+              <Button type="primary" ghost>
+                <PrinterOutlined />
+                Receipt
+              </Button>
+            </Receipt>
+          ),
+          props: { rowSpan: row.rowSpan },
+        };
+      },
       responsive: ["md"],
     },
   ];
 
   const loadSales = () => {
     const url = path + "index";
-    fetch(url)
-      .then((data) => {
-        if (data.ok) {
-          return data.json();
+    Requests.isGetRequest(url)
+      .then((response) => {
+        if (response.data.status == "Success") {
+          let data = FormatOrders.formatOrderData(response.data.sales);
+          setSales(data);
+          setIsLoading(false);
+        } else {
+          message.error("Failed to load. Try Again.", 5);
         }
-        throw new Error("Something Went Wrong.");
-      })
-      .then((data) => {
-        data.forEach((product) => {
-          const newEl = {
-            key: product.id,
-            id: product.id,
-            products: product.order,
-            totalAmount: product.total_amount,
-            paymentMethod: product.payment_method,
-            date: product.created_at,
-            reference: product.reference,
-            user: product.username,
-          };
-          setSales((prevSales) => {
-            return [newEl, ...prevSales];
-          });
-        });
-        setIsLoading(false);
       })
       .catch((err) => message.error(err), 10);
   };
@@ -120,10 +128,11 @@ const Sales = (props) => {
         <Card>
           <Table
             className="table-striped-rows"
-            dataSource={sales}
+            dataSource={FormatOrders.mergeOrderData(sales)}
             columns={columns}
             pagination={{ pageSize: 25 }}
             scroll={Utilities.isMobile() && { x: "100vw" }}
+            bordered
           />
         </Card>
       )}

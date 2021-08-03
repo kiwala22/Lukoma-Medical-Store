@@ -1,13 +1,13 @@
 class Api::V1::SalesController < ApplicationController
-    before_action :authenticate_user!
+    # before_action :authenticate_user!
     include CurrentBasket
     before_action :set_basket, only: [:create]
     #before_action :set_sale, only: %i[ show edit update destroy ]
   
     # GET /sales or /sales.json
     def index
-      @sales = Sale.all.order("created_at asc")
-      render json: @sales
+      @sales = Sale.all.order("created_at desc")
+      render json: {sales: @sales, status: "Success"}
     end
   
     # POST /sales or /sales.json
@@ -18,7 +18,13 @@ class Api::V1::SalesController < ApplicationController
       ## Process the Order
       order = []
       items.each do |item|
-        order << {"id": item.product.id, "name": item.product.name, "quantity": item.quantity, "amount": (item.product.unit_price * item.quantity) }.as_json
+        prod_quantity = Product.find(item.product.id).quantity
+        if prod_quantity < item.quantity || item.quantity == 0
+          render json: {error: "Some quantities chosen are more than available stock", status: "Failed"}
+          return
+        else
+          order << {"id": item.product.id, "name": item.product.name, "quantity": item.quantity, "amount": (item.product.unit_price * item.quantity) }.as_json
+        end
       end
   
       total_amount = 0
@@ -34,7 +40,6 @@ class Api::V1::SalesController < ApplicationController
       })
   
       if @sale.save
-        puts order
         ## If the order is saved, reduce the quantity on the corresponding products
         order.each do |product|
           stock = Product.find(product["id"])
@@ -42,7 +47,7 @@ class Api::V1::SalesController < ApplicationController
           remaining_quantity = (stock.quantity - sold_quantity).to_i
           stock.update(quantity: remaining_quantity)
         end
-        render json: @sale
+        render json: {sale: @sale, status: "Success"}
       else
         render json: @sale.errors
       end

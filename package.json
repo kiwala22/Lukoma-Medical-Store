@@ -27,6 +27,7 @@
     "react-router-dom": "^5.2.0",
     "react-to-print": "^2.12.6",
     "sass-loader": "^10.1.1",
+    "short-uuid": "^4.2.0",
     "turbolinks": "^5.2.0",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12"

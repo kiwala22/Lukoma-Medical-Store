@@ -3,8 +3,8 @@ class Api::V1::ProductsController < ApplicationController
     before_action :set_product, only: [:edit, :update, :destroy]
 
     def index
-        @products = Product.all.where("quantity > ?", 0).order("created_at asc")
-        render json: @products
+        @products = Product.all.where("quantity > ?", 0).order("created_at desc")
+        render json: {products: @products, status: "Success"}
     end
 
     def new
@@ -14,9 +14,9 @@ class Api::V1::ProductsController < ApplicationController
         @product = Product.new(product_params)
 
         if @product.save
-          render json: @product
+          render json: {product: @product, status: "Success"}
         else
-          render json: @product.errors
+          render json: {errors: @product.errors.messages.first, status: "Failed"}
         end
     end
 
@@ -29,7 +29,7 @@ class Api::V1::ProductsController < ApplicationController
     def destroy
         @product.destroy
 
-        render json: { notice: 'Product was successfully removed.' }
+        render json: { status: "OK" }
     end
 
     private

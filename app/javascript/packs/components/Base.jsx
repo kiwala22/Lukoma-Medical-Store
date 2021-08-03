@@ -15,15 +15,15 @@ import {
   Table,
   Typography,
 } from "antd";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, Route, Switch } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Image from "./images/logo.png";
 import Products from "./Products";
+import Requests from "./reusables/Requests";
 import Utilities from "./reusables/Utilities";
 import Sales from "./Sales";
-const { Sider, Content, Header, Footer } = Layout;
+const { Sider, Content, Header } = Layout;
 const { Text } = Typography;
 
 const Base = (props) => {
@@ -77,14 +77,9 @@ const Base = (props) => {
 
   const loadItems = () => {
     const url = path;
-    fetch(url)
-      .then((data) => {
-        if (data.ok) {
-          return data.json();
-        }
-        throw new Error("Network error.");
-      })
-      .then((data) => {
+    Requests.isGetRequest(url)
+      .then((response) => {
+        let data = response.data;
         data.forEach((product) => {
           const newEl = {
             key: product.id,
@@ -98,7 +93,7 @@ const Base = (props) => {
           });
         });
       })
-      .catch((err) => message.error("Error: " + err), 10);
+      .catch((err) => message.error(err), 10);
   };
 
   const reloadBasket = () => {
@@ -109,62 +104,44 @@ const Base = (props) => {
   const deleteItems = () => {};
 
   const completeSale = () => {
-    const csrf = document
-      .querySelector("meta[name='csrf-token']")
-      .getAttribute("content");
     const url = "/api/v1/sales/create";
-    fetch(url, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": csrf,
-      },
-    })
-      .then((data) => {
-        if (data.ok) {
+    const values = {};
+    Requests.isPostRequest(url, values)
+      .then((response) => {
+        if (response.data.status == "Success") {
           message.success("Order Processed Successfully", 5);
-
-          return data.json();
+          clearBasket();
+          setIsRefreshing(true);
+          setIsRefreshing(false);
+        } else if (response.data.status == "Failed") {
+          message.error(response.data.error, 10);
+        } else {
+          message.error("Order Failed. Try Again.", 5);
         }
-        throw new Error("Network error.");
-      })
-      .then(() => {
-        clearBasket();
-        setIsRefreshing(true);
-        setIsRefreshing(false);
       })
       .catch((err) => message.error("Error: " + err));
   };
 
   const clearBasket = () => {
-    const csrf = document
-      .querySelector("meta[name='csrf-token']")
-      .getAttribute("content");
     const url = "/clear_basket";
+    let values = {};
 
-    fetch(url, {
-      method: "delete",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": csrf,
-      },
-    })
-      .then((data) => {
-        if (data.ok) {
+    Requests.isDeleteRequest(url, values)
+      .then((response) => {
+        if (response.data.status == "OK") {
           close();
           reloadBasket();
-          message.success("Basket Is now Empty", 3);
-          return data.json();
+          message.success("Basket Is now Empty", 1);
+        } else {
+          message.error("Failed. Try Again", 1);
         }
-        throw new Error("Network error.");
       })
-      .catch((err) => message.error("Error: " + err));
+      .catch((err) => message.error(err), 5);
   };
 
   const handleLogout = (e) => {
-    // e.preventDefault();
-    axios
-      .get("/users/sign_out", {})
+    let path = "/users/sign_out";
+    Requests.isGetRequest(path)
       .then(() => {
         props.history.push("/users/sign_in");
         window.location.reload();
