@@ -1,7 +1,7 @@
 class LineItemsController < ApplicationController
   before_action :authenticate_user!
   include CurrentBasket
-  before_action :set_basket, only: %i[ create basket_data destroy ]
+  before_action :set_basket, only: %i[ create basket_data destroy line_item_destroy ]
   #before_action :set_line_item, only: %i[ show edit update destroy ]
 
 
@@ -28,7 +28,7 @@ class LineItemsController < ApplicationController
     products = []
     
     @basket_data.each do |item|
-      products <<  {"id": item.product.id, "name": item.product.name, "quantity": item.quantity, "amount": (item.product.unit_price * item.quantity) }
+      products <<  {"lineId": item.id, "id": item.product.id, "name": item.product.name, "quantity": item.quantity, "amount": (item.product.unit_price * item.quantity) }
     end
     render json: products
   end
@@ -46,6 +46,14 @@ class LineItemsController < ApplicationController
   end
 
   def line_item_destroy
+    @line_item = LineItem.find(params[:id])
+    @basket = Basket.find(@line_item.basket_id)
+    if @line_item.delete
+      render json: {status: "OK"}
+    else
+      render json: {status: "Error"}
+    end
+    
   end
 
   private

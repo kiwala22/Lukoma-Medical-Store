@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   match "sales" => "sales#index", via: [:get]
   match "basket" => "line_items#basket_data", via: [:get]
   match "clear_basket" => "line_items#destroy", via: [:delete]
+  match "remove_item" => "line_items#line_item_destroy", via: [:post]
   
   devise_for :users
   devise_for :admin_users, ActiveAdmin::Devise.config

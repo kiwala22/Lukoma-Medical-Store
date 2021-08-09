@@ -1,6 +1,7 @@
 import {
   AppstoreOutlined,
   BarChartOutlined,
+  CloseCircleOutlined,
   CloseOutlined,
   DollarOutlined,
   LogoutOutlined,
@@ -34,7 +35,8 @@ const Base = (props) => {
   const [collapseWidth, setCollapseWidth] = useState("80");
   const [width, setWidth] = useState("200");
   const path = "/basket";
-  const key = `open${Date.now()}`;
+  // const key = `open${Date.now()}`;
+  const key = "updatable";
   const [items, setItems] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -57,6 +59,23 @@ const Base = (props) => {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
+    },
+    {
+      title: "Remove",
+      key: "delete",
+      render: (_text, record) => (
+        <>
+          <a
+            // href="#"
+            type="danger"
+            style={{ float: "right" }}
+            onClick={() => deleteItems(record.lineId)}
+          >
+            <CloseCircleOutlined />
+          </a>
+        </>
+      ),
+      responsive: ["md"],
     },
   ];
 
@@ -93,7 +112,28 @@ const Base = (props) => {
     loadItems();
   };
 
-  const deleteItems = () => {};
+  const deleteItems = (id) => {
+    const url = "/remove_item";
+    let values = { id: id };
+    Requests.isPostRequest(url, values)
+      .then((response) => {
+        if (response.data.status == "OK") {
+          reloadBasket();
+          close();
+          let dataItems = items;
+          let index = dataItems.findIndex((el) => el.lineId === id);
+          dataItems.splice(index, 1);
+          if (dataItems.length > 0) {
+            setTimeout(() => {
+              openBasket(dataItems);
+            }, 500);
+          }
+        } else {
+          message.error("Failed. Try Again.", 2);
+        }
+      })
+      .catch((err) => message.error(err), 5);
+  };
 
   const completeSale = () => {
     const url = "/api/v1/sales/create";
@@ -143,7 +183,7 @@ const Base = (props) => {
       });
   };
 
-  const openBasket = () => {
+  const openBasket = (values) => {
     const btn = (
       <Button
         type="primary"
@@ -155,6 +195,10 @@ const Base = (props) => {
       </Button>
     );
     notification.open({
+      // duration: 0,
+      key,
+      btn,
+      duration: 0,
       message: (
         <span>
           Sales Basket{" "}
@@ -173,7 +217,7 @@ const Base = (props) => {
       description: (
         <>
           <Table
-            dataSource={items}
+            dataSource={values}
             columns={columns}
             pagination={false}
             bordered
@@ -214,9 +258,6 @@ const Base = (props) => {
         </>
       ),
       closeIcon: <CloseOutlined />,
-      duration: 0,
-      btn,
-      key,
     });
   };
 
@@ -237,7 +278,7 @@ const Base = (props) => {
             Med Store
           </span>
           <span style={{ float: "right", paddingRight: 10 }}>
-            <Button type="primary" ghost onClick={openBasket}>
+            <Button type="primary" ghost onClick={() => openBasket(items)}>
               <ShoppingCartOutlined />
               Basket
             </Button>

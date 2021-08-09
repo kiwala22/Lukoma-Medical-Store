@@ -9,6 +9,7 @@ export default {
     return axios.post(path, variables, { headers: setHeaders() });
   },
   isDeleteRequest(path, variables) {
+    console.log(variables);
     return axios.delete(path, variables, { headers: setHeaders() });
   },
 };
