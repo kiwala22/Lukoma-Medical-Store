@@ -91,17 +91,6 @@ const Products = (props) => {
           >
             Reset
           </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({ closeDropdown: false });
-              setSearchText(selectedKeys[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Filter
-          </Button>
         </Space>
       </div>
     ),
@@ -138,7 +127,7 @@ const Products = (props) => {
       title: "Batch No#",
       dataIndex: "batch_no",
       key: "batch",
-      ...getColumnSearchProps("batchNo"),
+      ...getColumnSearchProps("batch_no"),
     },
     {
       title: "Name",
@@ -169,7 +158,7 @@ const Products = (props) => {
       responsive: ["md"],
     },
     {
-      title: "Actions",
+      title: "Sale",
       key: "action",
       render: (_text, record) => (
         <>
@@ -189,27 +178,30 @@ const Products = (props) => {
             okText="Confirm"
             cancelText="Cancel"
           >
-            <Button
-              type="primary"
-              // onClick={() => addProductToBasket(record.id)}
-            >
+            <Button type="primary" ghost>
               <PlusCircleOutlined />
               Sale
             </Button>
           </Popconfirm>
-          <span></span>
-          {visible && (
-            <Popconfirm
-              title="Are you sure to delete this medicine?"
-              onConfirm={() => deleteProduct(record.id)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <a href="#" type="danger" style={{ float: "right" }}>
-                Delete{" "}
-              </a>
-            </Popconfirm>
-          )}
+        </>
+      ),
+      responsive: ["md"],
+    },
+    {
+      title: "Delete",
+      key: "delete",
+      render: (_text, record) => (
+        <>
+          <Popconfirm
+            title="Are you sure to delete this medicine?"
+            onConfirm={() => deleteProduct(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <a href="#" type="danger" style={{ float: "right" }}>
+              Delete{" "}
+            </a>
+          </Popconfirm>
         </>
       ),
       responsive: ["md"],
@@ -298,13 +290,18 @@ const Products = (props) => {
             <Table
               className="table-striped-rows"
               dataSource={products}
-              columns={columns}
+              columns={
+                visible
+                  ? columns
+                  : columns.filter((col) => col.key !== "delete")
+              }
               pagination={{ pageSize: 25 }}
               scroll={Utilities.isMobile() && { x: "100vw" }}
               bordered
               rowKey={() => {
                 return shortUUID.generate();
               }}
+              size="small"
             />
           </Card>
         </>

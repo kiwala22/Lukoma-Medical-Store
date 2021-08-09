@@ -8,7 +8,7 @@ import Rails from "@rails/ujs";
 import "channels";
 import Turbolinks from "turbolinks";
 
-require("./components/App");
+require("../src/components/App");
 
 Rails.start();
 Turbolinks.start();

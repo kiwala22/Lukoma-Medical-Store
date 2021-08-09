@@ -1,5 +1,5 @@
 class Api::V1::SalesController < ApplicationController
-    # before_action :authenticate_user!
+    before_action :authenticate_user!
     include CurrentBasket
     before_action :set_basket, only: [:create]
     #before_action :set_sale, only: %i[ show edit update destroy ]

@@ -4,6 +4,7 @@ import {
   CloseOutlined,
   DollarOutlined,
   LogoutOutlined,
+  ProjectOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
 import {
@@ -17,12 +18,14 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link, Route, Switch } from "react-router-dom";
+import shortUUID from "short-uuid";
 import Dashboard from "./Dashboard";
 import Image from "./images/logo.png";
 import Products from "./Products";
 import Requests from "./reusables/Requests";
 import Utilities from "./reusables/Utilities";
 import Sales from "./Sales";
+import Utility from "./Utility";
 const { Sider, Content, Header } = Layout;
 const { Text } = Typography;
 
@@ -80,18 +83,7 @@ const Base = (props) => {
     Requests.isGetRequest(url)
       .then((response) => {
         let data = response.data;
-        data.forEach((product) => {
-          const newEl = {
-            key: product.id,
-            id: product.id,
-            name: product.name,
-            amount: product.amount,
-            quantity: product.quantity,
-          };
-          setItems((prevItems) => {
-            return [newEl, ...prevItems];
-          });
-        });
+        setItems(data);
       })
       .catch((err) => message.error(err), 10);
   };
@@ -184,6 +176,11 @@ const Base = (props) => {
             dataSource={items}
             columns={columns}
             pagination={false}
+            bordered
+            rowKey={() => {
+              return shortUUID.generate();
+            }}
+            size="small"
             summary={(pageData) => {
               let totalAmount = 0;
               pageData.forEach(({ amount }) => {
@@ -284,6 +281,9 @@ const Base = (props) => {
             <Menu.Item key="/sales/" icon={<DollarOutlined />}>
               <Link to={"/sales/"}>Sales</Link>
             </Menu.Item>
+            <Menu.Item key="/utilities/" icon={<ProjectOutlined />}>
+              <Link to={"/utilities/"}>Utilities</Link>
+            </Menu.Item>
           </Menu>
           <Menu
             theme="dark"
@@ -335,6 +335,7 @@ const Base = (props) => {
                 )}
               />
               <Route path="/sales/" component={Sales} />
+              <Route path="/utilities/" component={Utility} />
               <Route path={["/"]} component={Dashboard} />
             </Switch>
           </div>

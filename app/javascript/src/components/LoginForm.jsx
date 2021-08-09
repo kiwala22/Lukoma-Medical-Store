@@ -42,7 +42,6 @@ const LoginForm = (props) => {
         message.error("Invalid Username or Password Combination", 5);
         setLoading(false);
       });
-    setLoading(false);
   };
 
   return (

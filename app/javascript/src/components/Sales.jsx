@@ -42,7 +42,7 @@ const Sales = (props) => {
       key: "quantity",
     },
     {
-      title: "Amount @",
+      title: "Amount Each",
       dataIndex: "amount",
       key: "amount",
     },
@@ -77,7 +77,7 @@ const Sales = (props) => {
       },
     },
     {
-      title: "Actions",
+      title: "Print",
       key: "action",
       render: (record, row) => {
         return {
@@ -133,6 +133,7 @@ const Sales = (props) => {
             pagination={{ pageSize: 25 }}
             scroll={Utilities.isMobile() && { x: "100vw" }}
             bordered
+            size="small"
           />
         </Card>
       )}
