@@ -198,7 +198,7 @@ const Products = (props) => {
             okText="Yes"
             cancelText="No"
           >
-            <a href="#" type="danger" style={{ float: "right" }}>
+            <a href="#" type="danger">
               Delete{" "}
             </a>
           </Popconfirm>

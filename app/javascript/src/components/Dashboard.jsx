@@ -101,6 +101,14 @@ const Dashboard = (props) => {
     },
   ];
 
+  const lowStockColumns = [
+    {
+      title: "Product Name",
+      dataIndex: "name",
+      key: "name",
+    },
+  ];
+
   const options = {
     tooltip: {
       trigger: "axis",
@@ -220,7 +228,13 @@ const Dashboard = (props) => {
               xs={{ span: 24 }}
             >
               <Card title="Out of Stock">
-                <Card bordered={false} align="center">
+                <Table
+                  className="table-striped-rows"
+                  dataSource={lowStock}
+                  columns={lowStockColumns}
+                  pagination={{ defaultPageSize: 10 }}
+                />
+                {/* <Card bordered={false} align="center">
                   <div>
                     <span style={{ color: "darkslategray", fontSize: 15 }}>
                       {lowStock.map((product, index) => (
@@ -228,7 +242,7 @@ const Dashboard = (props) => {
                       ))}
                     </span>
                   </div>
-                </Card>
+                </Card> */}
               </Card>
             </Col>
             <Col
@@ -242,7 +256,7 @@ const Dashboard = (props) => {
                   className="table-striped-rows"
                   dataSource={expiredStock}
                   columns={columns}
-                  pagination={false}
+                  pagination={{ defaultPageSize: 10 }}
                 />
               </Card>
             </Col>
