@@ -1,12 +1,14 @@
 class Api::V1::ReportsController < ApplicationController
   before_action :authenticate_user!
   include CurrentBasket
+
+  ## Change the sale_totals and averages methods to use sale date using the SQL COALESCE method
   def sale_totals
     sales_amounts = []
     date_labels = []
     ((Date.today - 21) .. Date.today).each do |f|
       date_labels << (f.to_s)
-      amounts = Sale.where("created_at >=? AND created_at <= ?", f.beginning_of_day, f.end_of_day).sum(:total_amount)
+      amounts = Sale.where("COALESCE(sale_date, created_at) >= ? AND COALESCE(sale_date, created_at) <= ?", f.beginning_of_day, f.end_of_day).sum(:total_amount)
       sales_amounts << amounts
     end
     @analytics = {labels: date_labels, totals: sales_amounts}
@@ -16,8 +18,8 @@ class Api::V1::ReportsController < ApplicationController
   end
 
   def averages
-    total_daily = Sale.where("created_at >=? AND created_at <= ?", Date.today.beginning_of_day, Date.today.end_of_day).sum(:total_amount)
-    total_month = Sale.where("created_at >=? AND created_at <= ?", Date.today.beginning_of_month, Date.today.end_of_month).sum(:total_amount)
+    total_daily = Sale.where("COALESCE(sale_date, created_at) >= ? AND COALESCE(sale_date, created_at) <= ?", Date.today.beginning_of_day, Date.today.end_of_day).sum(:total_amount)
+    total_month = Sale.where("COALESCE(sale_date, created_at) >= ? AND COALESCE(sale_date, created_at) <= ?", Date.today.beginning_of_month, Date.today.end_of_month).sum(:total_amount)
     days_in_month = Time.now.end_of_month.day
     average_monthly = (total_month / days_in_month).to_f
 

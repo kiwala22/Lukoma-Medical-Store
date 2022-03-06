@@ -7,6 +7,7 @@ class Api::V1::SalesController < ApplicationController
     # GET /sales or /sales.json
     def index
       @sales = Sale.all.order("created_at desc")
+
       render json: {sales: @sales, status: "Success"}
     end
   
@@ -14,6 +15,9 @@ class Api::V1::SalesController < ApplicationController
     def create
       ## Find the products from the basket
       items = @basket.line_items
+
+      ## Check if sale date has been provided
+      sale_date = params[:saleDate].present? ? params[:saleDate] : Time.now
   
       ## Process the Order
       order = []
@@ -36,7 +40,8 @@ class Api::V1::SalesController < ApplicationController
         reference: generate_reference(),
         total_amount: total_amount,
         user_id: current_user.id,
-        username: current_user.username
+        username: current_user.username,
+        sale_date: sale_date 
       })
   
       if @sale.save

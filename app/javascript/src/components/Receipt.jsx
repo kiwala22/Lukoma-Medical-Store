@@ -82,7 +82,7 @@ class Receipt extends Component {
               Purchase Date:{" "}
               <Text strong>
                 <Moment format="D MMM YYYY - HH:mm">
-                  {this.props.data.created_at}
+                  {this.props.data.sale_date || this.props.data.created_at}
                 </Moment>
               </Text>
             </Text>

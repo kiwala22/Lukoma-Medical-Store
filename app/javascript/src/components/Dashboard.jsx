@@ -2,6 +2,7 @@ import { DollarOutlined } from "@ant-design/icons";
 import { Avatar, Card, Col, message, PageHeader, Row, Table } from "antd";
 import ReactECharts from "echarts-for-react";
 import React, { useEffect, useState } from "react";
+import shortUUID from "short-uuid";
 import Requests from "./reusables/Requests";
 import Spinner from "./Spinner";
 
@@ -91,12 +92,12 @@ const Dashboard = (props) => {
     {
       title: "Batch Number",
       dataIndex: "batchNo",
-      key: "batch",
+      key: shortUUID.generate(),
     },
     {
       title: "Expiry Date",
       dataIndex: "expiryDate",
-      key: "expiry_date",
+      key: shortUUID.generate(),
       responsive: ["md"],
     },
   ];
@@ -105,7 +106,7 @@ const Dashboard = (props) => {
     {
       title: "Product Name",
       dataIndex: "name",
-      key: "name",
+      key: shortUUID.generate(),
     },
   ];
 
@@ -233,6 +234,7 @@ const Dashboard = (props) => {
                   dataSource={lowStock}
                   columns={lowStockColumns}
                   pagination={{ defaultPageSize: 10 }}
+                  key={shortUUID.generate()}
                 />
                 {/* <Card bordered={false} align="center">
                   <div>
@@ -257,6 +259,7 @@ const Dashboard = (props) => {
                   dataSource={expiredStock}
                   columns={columns}
                   pagination={{ defaultPageSize: 10 }}
+                  key={shortUUID.generate()}
                 />
               </Card>
             </Col>

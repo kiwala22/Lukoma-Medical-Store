@@ -10,6 +10,8 @@ import {
 } from "@ant-design/icons";
 import {
   Button,
+  DatePicker,
+  Form,
   Layout,
   Menu,
   message,
@@ -35,7 +37,7 @@ const Base = (props) => {
   const [collapseWidth, setCollapseWidth] = useState("80");
   const [width, setWidth] = useState("200");
   const path = "/basket";
-  // const key = `open${Date.now()}`;
+  const formRef = React.createRef();
   const key = "updatable";
   const [items, setItems] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -137,7 +139,10 @@ const Base = (props) => {
 
   const completeSale = () => {
     const url = "/api/v1/sales/create";
-    const values = {};
+    const values =
+      formRef.current.props.value !== undefined
+        ? { saleDate: formRef.current.props.value.format() }
+        : {};
     Requests.isPostRequest(url, values)
       .then((response) => {
         if (response.data.status == "Success") {
@@ -255,6 +260,23 @@ const Base = (props) => {
               }
             }}
           />
+          {/* Select date when sale is made */}
+          <br />
+          <Form layout="vertical">
+            <Form.Item name="sale_date" label="Sale Date (optional)">
+              <DatePicker
+                style={{ width: "100%" }}
+                ref={formRef}
+                dateRender={(current) => {
+                  return (
+                    <div className="ant-picker-cell-inner">
+                      {current.date()}
+                    </div>
+                  );
+                }}
+              />
+            </Form.Item>
+          </Form>
         </>
       ),
       closeIcon: <CloseOutlined />,

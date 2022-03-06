@@ -69,7 +69,8 @@ const Sales = (props) => {
       title: "Date Made",
       dataIndex: "created_at",
       key: "date",
-      render: (date, row) => {
+      render: (_, row) => {
+        let date = row.sale_date === null ? row.created_at : row.sale_date;
         return {
           children: <Moment format="D MMM YYYY - HH:mm">{date}</Moment>,
           props: { rowSpan: row.rowSpan },
