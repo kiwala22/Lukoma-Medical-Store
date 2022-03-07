@@ -59,6 +59,7 @@ const Dashboard = (props) => {
         data.forEach((product) => {
           const newEl = {
             key: product,
+            batchNo: product.batch_no,
             name: product.name,
           };
           setLowStock((prevLowStock) => {
@@ -103,6 +104,11 @@ const Dashboard = (props) => {
   ];
 
   const lowStockColumns = [
+    {
+      title: "Batch Number",
+      dataIndex: "batchNo",
+      key: shortUUID.generate(),
+    },
     {
       title: "Product Name",
       dataIndex: "name",

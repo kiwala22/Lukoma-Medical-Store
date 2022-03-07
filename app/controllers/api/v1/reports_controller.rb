@@ -44,7 +44,7 @@ class Api::V1::ReportsController < ApplicationController
     @stock = []
     low_stock = Product.where("quantity <= ?", 0)
     low_stock.each do |product|
-      @stock << {name: product.name}
+      @stock << {batch_no: product.batch_no, name: product.name}
     end
     render json: @stock
   end
